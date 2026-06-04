@@ -488,13 +488,65 @@ ipcMain.handle('project:get-readme', async (event, projectPath) => {
     description = `Proyecto de desarrollo local. Ruta del proyecto en el sistema: ${projectPath}`;
   }
 
-  // Limit description length to 350 chars
-  if (description.length > 350) {
-    description = description.substring(0, 350) + '...';
-  }
+
 
   return {
     description,
     technologies: technologies || 'General'
   };
 });
+
+// Save edited description to both global and local files
+ipcMain.handle('project:save-readme', async (event, projectPath, newDescription) => {
+  if (!projectPath || !fs.existsSync(projectPath)) {
+    return { success: false, error: 'La ruta del proyecto no existe.' };
+  }
+
+  const folderName = path.basename(projectPath);
+  const globalDescPath = 'C:\\Users\\Lenovo\\OneDrive\\Documentos\\Proyectos\\descripcion.md';
+
+  try {
+    // 1. Update the global descripcion.md file
+    if (fs.existsSync(globalDescPath)) {
+      let globalContent = fs.readFileSync(globalDescPath, 'utf8');
+      const regex = new RegExp(`(##\\s+${folderName}\\r?\\n)([\\s\\S]*?)(?=\\r?\\n##\\s+|$)`, 'i');
+      const match = globalContent.match(regex);
+      
+      if (match) {
+        const sectionContent = match[2];
+        const lines = sectionContent.split('\n');
+        let technologiesLine = '';
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed.match(/^\*\*Tecnologías:\*\*/i) || trimmed.match(/^Tecnologías:/i)) {
+            technologiesLine = trimmed;
+            break;
+          }
+        }
+        
+        let newSectionContent = newDescription.trim() + '\n';
+        if (technologiesLine) {
+          newSectionContent += technologiesLine + '\n';
+        } else {
+          newSectionContent += '**Tecnologías:** General\n';
+        }
+        
+        globalContent = globalContent.replace(regex, `$1${newSectionContent}`);
+      } else {
+        globalContent += `\n\n## ${folderName}\n${newDescription.trim()}\n**Tecnologías:** General\n`;
+      }
+      
+      fs.writeFileSync(globalDescPath, globalContent, 'utf8');
+    }
+
+    // 2. Write to local project-level descripcion.md
+    const localDescPath = path.join(projectPath, 'descripcion.md');
+    fs.writeFileSync(localDescPath, newDescription.trim(), 'utf8');
+
+    return { success: true };
+  } catch (e) {
+    console.error('Error saving description:', e);
+    return { success: false, error: e.message };
+  }
+});
+

@@ -1895,3 +1895,105 @@ button:active {
 .no-transition * {
   transition: none !important;
 }
+
+/* Cyberpunk Input Modal */
+.cyber-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 8, 14, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cyber-modal-content {
+  background: var(--bg-lighter);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(var(--primary-glow-rgb), 0.2);
+  border-radius: var(--border-radius-lg);
+  width: 500px;
+  max-width: 90%;
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cyber-modal.show .cyber-modal-content {
+  transform: translateY(0);
+}
+
+.cyber-modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--panel-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  color: var(--primary-glow);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close-btn:hover {
+  color: var(--text-main);
+}
+
+.cyber-modal-body {
+  padding: 20px;
+}
+
+.cyber-modal-body textarea {
+  width: 100%;
+  background-color: var(--bg-darker);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--border-radius-md);
+  color: var(--text-main);
+  padding: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: none;
+  box-sizing: border-box;
+  transition: all var(--transition-speed);
+}
+
+.cyber-modal-body textarea:focus {
+  outline: none;
+  border-color: var(--primary-glow);
+  box-shadow: 0 0 10px rgba(var(--primary-glow-rgb), 0.15);
+}
+
+.cyber-modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--panel-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+

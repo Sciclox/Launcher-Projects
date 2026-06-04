@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     detect: (customPaths) => ipcRenderer.invoke('projects:detect', customPaths),
     launch: (project, ide) => ipcRenderer.invoke('project:launch', project, ide),
     getReadme: (projectPath) => ipcRenderer.invoke('project:get-readme', projectPath),
+    saveReadme: (projectPath, newDescription) => ipcRenderer.invoke('project:save-readme', projectPath, newDescription),
     onUpdated: (callback) => {
       const listener = (event, list) => callback(list);
       ipcRenderer.on('projects:updated', listener);

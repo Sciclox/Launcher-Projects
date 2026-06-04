@@ -201,6 +201,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // 8. Setup Game Manage Dropdown Menu
   setupManageDropdown();
+
+  // 9. Setup Description Editor Modal
+  setupDescriptionModal();
 });
 
 // Sidebar Collapse Toggle Logic
@@ -276,6 +279,52 @@ function setupManageDropdown() {
       if (!e.target.closest('#game-manage-menu')) {
         dropdown.classList.remove('show');
         triggerBtn.classList.remove('active');
+      }
+    });
+  }
+}
+
+// Description Modal Setup
+function setupDescriptionModal() {
+  const modal = document.getElementById('edit-desc-modal');
+  const closeBtn = document.getElementById('close-desc-modal');
+  const cancelBtn = document.getElementById('cancel-desc-btn');
+  const saveBtn = document.getElementById('save-desc-btn');
+  const descInput = document.getElementById('modal-desc-input');
+
+  if (modal && closeBtn && cancelBtn && saveBtn && descInput) {
+    const closeModal = () => {
+      synth.playClick();
+      modal.classList.remove('show');
+    };
+    
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    saveBtn.addEventListener('click', async () => {
+      synth.playClick();
+      if (!currentHeroGame) return;
+
+      const newDesc = descInput.value.trim();
+      showToast('Guardando nueva descripción...', 'SYS');
+
+      const result = await window.electronAPI.games.saveReadme(currentHeroGame.path, newDesc);
+      
+      if (result.success) {
+        currentHeroGame.description = newDesc;
+        await saveGamesList();
+        
+        modal.classList.remove('show');
+        showToast('Descripción guardada correctamente.', 'SUCCESS');
+        updateHeroBanner(currentHeroGame);
+      } else {
+        showToast(`Error al guardar: ${result.error}`, 'ERROR');
       }
     });
   }
@@ -549,7 +598,14 @@ function updateHeroBanner(game) {
   window.electronAPI.games.getReadme(game.path).then((data) => {
     if (currentHeroGame && currentHeroGame.id === game.id) {
       if (data && typeof data === 'object') {
-        heroDescription.textContent = data.description || `Proyecto de desarrollo local. Ruta del proyecto en el sistema: ${game.path}`;
+        const fullDescription = data.description || '';
+        game.description = fullDescription;
+        
+        let displayDesc = fullDescription;
+        if (displayDesc.length > 350) {
+          displayDesc = displayDesc.substring(0, 350) + '...';
+        }
+        heroDescription.textContent = displayDesc || `Proyecto de desarrollo local. Ruta del proyecto en el sistema: ${game.path}`;
         
         // Render multiple technology tags dynamically
         if (data.technologies && heroPlatformContainer) {
@@ -564,7 +620,14 @@ function updateHeroBanner(game) {
           });
         }
       } else {
-        heroDescription.textContent = data || `Proyecto de desarrollo local. Ruta del proyecto en el sistema: ${game.path}`;
+        const fullDesc = data || '';
+        game.description = fullDesc;
+        
+        let displayDesc = fullDesc;
+        if (displayDesc.length > 350) {
+          displayDesc = displayDesc.substring(0, 350) + '...';
+        }
+        heroDescription.textContent = displayDesc || `Proyecto de desarrollo local. Ruta del proyecto en el sistema: ${game.path}`;
       }
     }
   }).catch((err) => {
@@ -692,6 +755,25 @@ function updateHeroBanner(game) {
       showToast(`Icono de biblioteca cargado para ${game.title}.`, 'SUCCESS');
     }
   });
+
+  // Clone and bind Edit Description button
+  const heroEditDescBtn = document.getElementById('hero-edit-desc-btn');
+  if (heroEditDescBtn) {
+    const newEditDescBtn = heroEditDescBtn.cloneNode(true);
+    heroEditDescBtn.parentNode.replaceChild(newEditDescBtn, heroEditDescBtn);
+    newEditDescBtn.addEventListener('click', () => {
+      synth.playClick();
+      const descInput = document.getElementById('modal-desc-input');
+      descInput.value = game.description || '';
+      const modal = document.getElementById('edit-desc-modal');
+      modal.classList.add('show');
+      
+      const manageDropdown = document.getElementById('manage-dropdown');
+      const manageTriggerBtn = document.getElementById('manage-trigger-btn');
+      if (manageDropdown) manageDropdown.classList.remove('show');
+      if (manageTriggerBtn) manageTriggerBtn.classList.remove('active');
+    });
+  }
 
   // Clone and bind Delete button
   const newDelBtn = heroDeleteBtn.cloneNode(true);
