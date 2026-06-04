@@ -8,59 +8,6 @@ A premium Windows-based developer launcher designed with a retro-futuristic **Cy
 
 ---
 
-## 🎨 Preview & Aesthetics
-
-* Frameless design with neon-cyan accents and subtle micro-animations.
-* Interactive sidebar for quick navigation (Dashboard, Projects, Settings).
-* Fluid 3D-like hover effects on project cards and action buttons.
-* Custom global `descripcion.md` parsing to fetch rich descriptions and technology tags automatically.
-
----
-
-## 🚀 Key Features
-
-* **Multi-IDE & Terminal Support:** Open projects with one click in:
-  * **Antigravity IDE** & **Antigravity 2.0** (Built-in next-generation IDEs)
-  * **VS Code**
-  * **Sublime Text**
-  * **Visual Studio** (Auto-detects `.sln` and starts the appropriate compiler)
-  * **JetBrains WebStorm & PyCharm**
-  * **System Terminal** (CMD)
-  * **File Explorer**
-* **Auto-Discovery:** Automatically scans paths (like `C:\Users\Lenovo\OneDrive\Documentos\Proyectos`) and detects project types (NodeJS, Python, Rust, C++, Git, etc.) and cover images (such as `cover.png` or `screenshot.png`).
-* **Rich Descriptions Parser:** Parses the parent folder's `descripcion.md` file dynamically using custom regular expressions to extract clean tech badges and descriptive text.
-* **Persisted Database:** Saves settings, favorites, window bounds, volume, and scanning targets using local JSON files.
-
----
-
-## 📂 Featured Showcase Projects
-
-The launcher is pre-configured to showcase and launch the following 7 core projects:
-
-1. **`Web-Market-Coffee` (Three.js Web App)**
-   * *Description:* An interactive 3D virtual coffee shop simulation with fluid camera orbits and GSAP transitions.
-   * *Stack:* `Three.js`, `GSAP`, `Vite`, `HTML5/CSS3`
-2. **`Launcher-Projects` (Electron Dashboard - This App)**
-   * *Description:* The main retro-futurism control panel and launcher.
-   * *Stack:* `Electron`, `JavaScript`, `NodeJS`, `PowerShell API`
-3. **`Foresight` (Flutter Web)**
-   * *Description:* Multi-platform analytics frontend for interactive charts and responsive business dashboards.
-   * *Stack:* `Flutter`, `Dart`, `FlutterFlow`, `REST APIs`
-4. **`Habit-Buddy` (React Mobile Web)**
-   * *Description:* Productive habit tracking assistant with gamified rewards and Capacitor wrappers.
-   * *Stack:* `Capacitor`, `React`, `SQLite`, `Android/iOS`
-5. **`Novel-Writer` (Flutter Desktop)**
-   * *Description:* Distraction-free Markdown editor designed for authors writing long-form books.
-   * *Stack:* `Flutter`, `Dart`, `Flutter Quill`
-6. **`Screen-Translator` (Android Native)**
-   * *Description:* Instant translation client using OCR to read screen contents and present overlays.
-   * *Stack:* `Android SDK`, `Kotlin`, `OCR API`
-7. **`Youtube-Shield` (Android Native)**
-   * *Description:* Privacy-focused alternative YouTube player with ad-blocking engine.
-   * *Stack:* `Android SDK`, `Java`, `AdBlock Engine`
-
----
-
 ## 🛠️ Installation & Setup
 
 1. **Prerequisites:** Make sure you have [Node.js](https://nodejs.org/) installed.
