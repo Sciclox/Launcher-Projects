@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeoDeck // Game Launcher</title>
+  <!-- Google Fonts: Inter, Syne (wide sci-fi), Bebas Neue (cinematic condensed) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-matte-dark">
+  
+  <!-- Dynamic Background Wallpaper -->
+  <div id="wallpaper-bg" class="wallpaper-bg"></div>
+  <div class="app-overlay"></div>
+
+  <!-- Main Frameless Layout -->
+  <div class="app-container">
+    
+    <!-- Titlebar for custom window dragging -->
+    <header class="title-bar">
+      <div class="title-bar-logo">
+        <span>NEODECK // PROJECT LAUNCHER</span>
+      </div>
+      <div class="title-bar-drag"></div>
+      <div class="title-bar-controls">
+        <button class="win-btn" id="win-min" title="Minimizar">&#9472;</button>
+        <button class="win-btn" id="win-max" title="Maximizar">&#9744;</button>
+        <button class="win-btn close" id="win-close" title="Cerrar">&#9587;</button>
+      </div>
+    </header>
+
+    <!-- App Body containing Sidebar and Right Pane -->
+    <div class="app-body">
+      
+      <!-- Left Sidebar (Disabled in CSS, structural only) -->
+      <aside class="left-sidebar" style="display: none;">
+        <div class="sidebar-brand">
+          <div class="brand-header-row">
+            <div class="brand-texts">
+              <span class="brand-title">NeoDeck</span>
+              <span class="brand-subtitle">Project Console</span>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar-library">
+          <div class="library-header">MIS PROYECTOS</div>
+        </div>
+      </aside>
+
+      <!-- Main Display Panel (Right side) -->
+      <main class="main-content">
+
+        <!-- Top Navigation Header -->
+        <header class="right-header">
+          <!-- Logo Brand on the Left of top header -->
+          <div class="header-brand">
+            <span class="brand-title">NeoDeck</span>
+            <span class="brand-subtitle">Project Console</span>
+          </div>
+          
+          <nav class="nav-menu">
+            <button class="nav-item active" data-target="library-view">
+              Proyectos
+            </button>
+            <button class="nav-item" data-target="add-view">
+              Añadir Proyecto
+            </button>
+            <button class="nav-item" data-target="settings-view">
+              Configuración
+            </button>
+          </nav>
+
+          <!-- Search box, clock and audio button re-routed to top right -->
+          <div class="header-widgets">
+            <div class="search-box">
+              <input type="text" id="search-input" placeholder="Buscar proyecto...">
+              <span class="search-icon">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </span>
+            </div>
+            <div class="sys-clock" id="digital-clock">00:00:00</div>
+            <button id="sound-toggle-btn" class="btn-mini active" title="Sonido">
+              <span class="icon">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+              </span>
+            </button>
+            
+            <!-- Hidden game count stat helper for scripts -->
+            <span id="stats-game-count" style="display: none;">0</span>
+          </div>
+        </header>
+
+        <!-- 1. LIBRARY VIEW (Project Details View) -->
+        <section id="library-view" class="view-section active">
+          <div class="game-details-view" id="hero-banner">
+            <div class="game-details-bg" id="hero-banner-bg"></div>
+            <div class="game-details-overlay"></div>
+            
+            <!-- Tech / Cinematic orbit ring and lines decorations -->
+            <div class="details-orbit-ring"></div>
+            <div class="details-tech-line-h"></div>
+            <div class="details-tech-line-v"></div>
+            
+            <!-- Top toolbar row: Favorite + Manage -->
+            <div class="game-details-content">
+              <div class="hero-toolbar-row" id="hero-toolbar-row" style="display: none;">
+                <div class="game-favorite-container" id="game-favorite-container">
+                  <button class="favorite-toggle-btn" id="hero-fav-btn" title="Favorito">
+                    FAVORITO
+                  </button>
+                </div>
+                <div class="game-manage-menu" id="game-manage-menu">
+                  <button class="manage-trigger-btn" id="manage-trigger-btn" title="Gestionar">
+                    GESTIONAR
+                  </button>
+                  <div class="manage-dropdown" id="manage-dropdown">
+                    <button id="hero-change-icon-btn">CAMBIAR ICONO</button>
+                    <button id="hero-change-bg-btn">CAMBIAR FONDO</button>
+                    <div class="dropdown-divider"></div>
+                    <button id="hero-delete-btn" class="danger">ELIMINAR PROYECTO</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Scrollable Column Area -->
+              <div class="game-details-scrollable-col">
+                <div class="project-tags-container" id="hero-platform-container"></div>
+                <h1 class="game-title-large" id="hero-title">Selecciona un Proyecto</h1>
+                
+                <div class="game-stats-row">
+                  <span class="stat-item">Último registro: <strong id="hero-last-played">Nunca</strong></span>
+                  <span class="stat-item">Estado: <strong class="text-green">Listo</strong></span>
+                </div>
+                
+                <div class="game-desc-wrap">
+                  <p class="game-desc-text" id="hero-description">Elige un proyecto de la lista inferior para ver su información, cambiar la portada, abrirlo en tu editor de código o gestionarlo.</p>
+                </div>
+                
+                <div class="game-actions-row">
+                  <button class="play-btn-huge" id="hero-play-btn">
+                    ABRIR PROYECTO
+                  </button>
+                  <div class="ide-selector-wrap">
+                    <label for="project-ide-select">IDE / EDITOR</label>
+                    <select id="project-ide-select">
+                      <option value="vscode">VS CODE</option>
+                      <option value="explorer">EXPLORADOR</option>
+                      <option value="terminal">TERMINAL</option>
+                      <option value="sublime">SUBLIME TEXT</option>
+                      <option value="visualstudio">VISUAL STUDIO</option>
+                      <option value="pycharm">PYCHARM</option>
+                      <option value="webstorm">WEBSTORM</option>
+                      <option value="antigravity">ANTIGRAVITY IDE</option>
+                      <option value="antigravity2">ANTIGRAVITY 2.0</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Bottom Games Circular Carousel -->
+            <div class="bottom-carousel-container">
+              <button class="carousel-arrow left" id="carousel-prev-btn" title="Anterior">◀</button>
+              
+              <div class="games-carousel-scroll" id="games-grid">
+                <!-- Circular game items will be dynamically generated here -->
+              </div>
+              
+              <button class="carousel-arrow right" id="carousel-next-btn" title="Siguiente">▶</button>
+              
+              <!-- Empty State inside Carousel -->
+              <div class="empty-state" id="library-empty" style="display: none;">
+                <span class="empty-msg">No hay proyectos.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. AÑADIR PROYECTO VIEW (Manual + Auto-Escaneo) -->
+        <section id="add-view" class="view-section">
+          <div class="view-header">
+            <div class="view-title">
+              <h2>Añadir Proyecto</h2>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <!-- Column 1: Manual Registration -->
+            <div class="console-card">
+              <div class="card-title">Registro Manual</div>
+              
+              <form id="add-game-form" class="console-form">
+                <div class="form-group">
+                  <label for="game-title">Nombre del Proyecto</label>
+                  <input type="text" id="game-title" required placeholder="Escribe el nombre del proyecto..." autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                  <label for="game-path">Ruta de la Carpeta del Proyecto</label>
+                  <div class="input-with-button">
+                    <input type="text" id="game-path" required placeholder="C:\Users\Lenovo\...\mi-proyecto" readonly>
+                    <button type="button" id="browse-exe-btn" class="action-btn">EXAMINAR</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="game-platform">Tecnología Principal</label>
+                  <select id="game-platform">
+                    <option value="General">Proyecto General (Otros)</option>
+                    <option value="NodeJS">Node.js / Web</option>
+                    <option value="Python">Python</option>
+                    <option value="Rust">Rust</option>
+                    <option value="CPP">C++ / .NET</option>
+                    <option value="Git">Git Repository</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="game-cover">Imagen de Portada (Opcional)</label>
+                  <div class="input-with-button">
+                    <input type="text" id="game-cover" placeholder="Imagen local o URL..." autocomplete="off">
+                    <button type="button" id="browse-cover-btn" class="action-btn">EXAMINAR</button>
+                  </div>
+                  <small class="form-help">Si no seleccionas ninguna, usaremos un color temático según la tecnología del proyecto.</small>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="action-btn-large">
+                    REGISTRAR PROYECTO
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Column 2: Auto-Scan -->
+            <div class="console-card">
+              <div class="card-title">Escaneo Automático</div>
+              <p class="description">Escanea tus directorios de desarrollo para detectar carpetas de proyectos y su tecnología de forma inteligente.</p>
+              
+              <div class="scan-targets">
+                <div class="target-item active">
+                  <span class="indicator checked"></span>
+                  <span>Directorio Proyectos</span>
+                </div>
+                <div class="target-item" id="custom-target-indicator">
+                  <span class="indicator" id="custom-scan-path-led"></span>
+                  <span>Rutas Personalizadas</span>
+                </div>
+              </div>
+
+              <div class="scan-action-area">
+                <button id="start-scan-btn" class="action-btn-large">
+                  INICIAR ESCANEO
+                </button>
+              </div>
+
+              <!-- Scanning progress -->
+              <div id="scan-progress" class="scan-progress-container" style="display: none;">
+                <div class="scan-bar">
+                  <div class="scan-bar-fill"></div>
+                </div>
+                <div class="scan-status">Buscando carpetas de desarrollo en las rutas...</div>
+              </div>
+
+              <!-- Discovered Projects List -->
+              <div id="discovered-container" class="margin-top" style="display: none;">
+                <div class="card-title" style="margin-top: 12px;">Proyectos Detectados (<span id="discovered-count">0</span>)</div>
+                
+                <div class="discovered-header-row">
+                  <label class="custom-checkbox-container">
+                    <input type="checkbox" id="select-all-discovered" checked>
+                    <span class="checkmark"></span> SELECCIONAR TODOS
+                  </label>
+                  <button id="import-games-btn" class="action-btn-small">IMPORTAR PROYECTOS</button>
+                </div>
+
+                <div class="discovered-list" id="discovered-list">
+                  <!-- Found projects row -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. CONFIGURACIÓN VIEW -->
+        <section id="settings-view" class="view-section">
+          <div class="view-header">
+            <div class="view-title">
+              <h2>Configuración</h2>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <!-- Appearance settings -->
+            <div class="console-card">
+              <div class="card-title">Apariencia y Colores</div>
+              
+              <div class="form-group margin-top">
+                <label>Tema de Color Destacado</label>
+                <div class="theme-selectors">
+                  <button class="theme-selector indigo active" data-theme="theme-indigo" title="Indigo"></button>
+                  <button class="theme-selector teal" data-theme="theme-teal" title="Teal"></button>
+                  <button class="theme-selector slate" data-theme="theme-slate" title="Slate Gray"></button>
+                  <button class="theme-selector red" data-theme="theme-red" title="Crimson Red"></button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Fondo de Pantalla Personalizado</label>
+                <div class="bg-settings-row">
+                  <button id="select-bg-btn" class="action-btn">SELECCIONAR IMAGEN</button>
+                  <button id="clear-bg-btn" class="action-btn-secondary" style="display: none;">RESTAURAR DEFECTO</button>
+                </div>
+                <div id="bg-path-display" class="bg-path-text">Fondo: Consola Minimalista (Por defecto)</div>
+              </div>
+            </div>
+
+            <!-- Auto-scan directories settings -->
+            <div class="console-card">
+              <div class="card-title">Rutas de Búsqueda Personalizadas</div>
+              <p class="description">Agrega directorios adicionales donde buscar proyectos locales y repositorios de desarrollo.</p>
+              
+              <div class="custom-paths-control">
+                <button id="add-scan-path-btn" class="action-btn-small">AÑADIR CARPETA</button>
+              </div>
+
+              <div class="custom-paths-list" id="custom-paths-list">
+                <!-- Scan paths lists -->
+                <div class="path-empty-message">No se han configurado rutas de escaneo adicionales.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Notification Overlay -->
+  <div id="cyber-toast" class="app-toast">
+    <div class="toast-content">
+      <span class="toast-tag">Alerta</span>
+      <span class="toast-message" id="toast-message">Mensaje de la consola</span>
+    </div>
+  </div>
+
+  <script src="renderer.js" defer></script>
+</body>
+</html>
