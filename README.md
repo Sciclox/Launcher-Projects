@@ -1,4 +1,4 @@
-# ⚡ Launcher-Projects (Cyberpunk Developer Deck)
+# ⚡ Launcher-Projects
 
 [![Electron](https://img.shields.io/badge/Electron-v30.0-blueviolet?style=flat-square&logo=electron)](https://www.electronjs.org/)
 [![NodeJS](https://img.shields.io/badge/Node.js-v18+-green?style=flat-square&logo=node.js)](https://nodejs.org/)
